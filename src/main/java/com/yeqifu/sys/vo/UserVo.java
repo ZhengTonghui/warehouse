@@ -1,11 +1,9 @@
 package com.yeqifu.sys.vo;
 
 import com.yeqifu.sys.entity.User;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
 
 /**
  * @Author: 落亦-
@@ -22,4 +20,8 @@ public class UserVo extends User {
      * 验证码
      */
     private String code;
+    /**
+     * 入职日期
+     */
+    private String startDate;
 }

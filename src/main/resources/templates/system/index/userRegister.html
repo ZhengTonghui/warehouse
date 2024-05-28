@@ -93,6 +93,14 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">入职日期</label>
+                        <div class="layui-input-block">
+                            <input style="width: 277px;" class="layui-input" name="startDate" id="testView" required
+                                lay-verify="required">
+                            <div id="test2"></div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">性别</label>
                         <div class="layui-form">
                             <input type="radio" name="sex" value="1" title="男">
@@ -110,10 +118,11 @@
         </div>
     </div>
     <script type="text/javascript">
-        layui.use(['jquery', 'upload', 'form'], function () {
+        layui.use(['jquery', 'upload', 'form', 'laydate'], function () {
             var $ = layui.jquery;
             var upload = layui.upload;
             var form = layui.form;
+            var laydate = layui.laydate;
             form.on('submit(createUser)', function (data) {
                 var btn = $(this);
                 var params = data.field;
@@ -142,7 +151,11 @@
                         });
                     },
                     error: function (res) {
-                        layer.alert('注册失败');
+                        layer.alert('注册失败', {
+                            icon: 5,
+                            closeBtn: 0,
+                            btn: ['确定']
+                        });
                     }
                 });
             });
@@ -160,6 +173,15 @@
                     //给隐藏域赋值
                     $("#imgpath").val(path);
                 }
+            });
+            //入职时间
+            laydate.render({
+                elem: '#test2'
+                , position: 'static'
+                , change: function (value, date) { //监听日期被切换
+                    lay('#testView').val(value);
+                }
+
             });
         });
         function toPrevious() {

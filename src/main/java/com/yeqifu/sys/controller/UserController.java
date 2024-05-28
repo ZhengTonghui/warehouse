@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -385,6 +387,10 @@ public class UserController {
             userVo.setPwd(new Md5Hash(Constast.USER_DEFAULT_PWD,salt,2).toString());
             //设置用户默认头像
             userVo.setImgpath(userVo.getImgpath());
+            String hireDateStr=userVo.getStartDate();
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            Date hireDate = sdf.parse(hireDateStr);
+            userVo.setHiredate(hireDate);
             userService.save(userVo);
             return ResultObj.ADD_SUCCESS;
         } catch (Exception e) {
