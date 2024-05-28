@@ -1,8 +1,17 @@
 package com.yeqifu.sys.controller;
 
-import com.yeqifu.sys.common.WebUtils;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.yeqifu.sys.common.WebUtils;
+import com.yeqifu.sys.entity.Dept;
+import com.yeqifu.sys.service.IDeptService;
 
 /**
  * 系统进行跳转的路由
@@ -12,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("sys")
 public class SystemController {
+
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 跳转到登陆页面
@@ -27,7 +39,7 @@ public class SystemController {
      * @return
      */
     @RequestMapping("toUserInfo")
-    public String toUserInfo(){
+    public String toUserInfo(HttpSession session){
         return "system/user/userInfo";
     }
 
@@ -195,4 +207,10 @@ public class SystemController {
         return "system/cache/cacheManager";
     }
 
+    @RequestMapping("toUserRegister")
+    public String toRegister(Model model){
+        List<Dept> depts = deptService.list();
+        model.addAttribute("depts",depts);
+        return "system/index/userRegister";
+    }
 }

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:type="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>仓库管理注册页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/resources/css/public.css" media="all" />
+    <script type="text/javascript" src="/resources/layui/layui.js"></script>
+</head>
+
+<body>
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md6 layui-col-md-offset3">
+                <form class="layui-form" id="registerForm" method="post">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" type="text" name="name" required lay-verify="required"
+                                placeholder="请输入用户名">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">英文名称</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" type="text" name="loginname" required lay-verify="required"
+                                placeholder="请输入英文名称">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" type="password" name="password" required lay-verify="required"
+                                placeholder="请输入密码">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">确认密码</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" type="password" name="confirmPassword" required
+                                lay-verify="required" placeholder="请确认密码">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">地址</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" type="text" name="address" required lay-verify="required"
+                                placeholder="请输入地址">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">手机号码</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" type="text" name="phoneNumber" required lay-verify="required"
+                                placeholder="请输入手机号码">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" type="text" name="email" required lay-verify="required"
+                                placeholder="请输入手机号码">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">部门</label>
+                        <div class="layui-input-block">
+                            <select name="deptid">
+                                <option value="">请选择</option>
+                                <option th:each="dept:${depts}" th:value="${dept.id}">[[${dept.name}]]</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label style="margin-top: 17px;" class="layui-form-label">图片</label>
+                        <div class="layui-col-md3 layui-col-xs12 user_right">
+                            <div class="layui-upload-list userFace">
+                                <input type="hidden" name="imgpath" id="imgpath">
+                                <button type="button" class="layui-btn layui-btn-primary userFaceBtn"><i
+                                        class="layui-icon">&#xe67c;</i>
+                                    上传</button>
+                                <img style="margin-left: 226px;margin-top: -54px;
+                            width: 100px;
+                            height: 109px;" class="layui-upload-img layui-circle userFaceBtn userAvatar" id="userFace">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-form">
+                            <input type="radio" name="sex" value="1" title="男">
+                            <input type="radio" name="sex" value="2" title="女" checked>
+                        </div>
+                    </div>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn" lay-submit="" lay-filter="createUser">提交</button>
+                    </div>
+                </form>
+                <div class="layui-input-block" style="margin-top:-34px;margin-left: 501px;">
+                    <button onclick="toPrevious()" class="layui-btn layui-btn-danger" id="cancelRegister">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        layui.use(['jquery', 'upload', 'form'], function () {
+            var $ = layui.jquery;
+            var upload = layui.upload;
+            var form = layui.form;
+            form.on('submit(createUser)', function (data) {
+                var btn = $(this);
+                var params = data.field;
+                var paramsJson = JSON.stringify(params);
+                var username = data.field.username;
+                var password = data.field.password;
+                var confirmPassword = data.field.confirmPassword;
+                if (password !== confirmPassword) {
+                    layer.alert('密码不一致');
+                    return;
+                }
+                $.post({
+                    url: '/user/createUser',
+                    type: 'POST',
+                    data: paramsJson,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (res) {
+                        layer.alert('注册成功', {
+                            icon: 6,
+                            closeBtn: 0,
+                            btn: ['确定'],
+                            end: function () {
+                                // 页面跳转
+                                window.location.href = "/sys/toLogin";
+                            }
+                        });
+                    },
+                    error: function (res) {
+                        layer.alert('注册失败');
+                    }
+                });
+            });
+            //上传头像
+            upload.render({
+                elem: '.userFaceBtn',
+                url: '/file/uploadFile',
+                acceptMime: 'image/*',
+                field: 'mf',
+                method: "post",
+                done: function (res, index, upload) {
+                    var path = res.path;
+                    $('#userFace').attr('src', '/file/showImageByPath?path=' + path);
+                    $('.userFace').css("background", "#fff");
+                    //给隐藏域赋值
+                    $("#imgpath").val(path);
+                }
+            });
+        });
+        function toPrevious() {
+            window.location.href = "/sys/toLogin";
+        };
+    </script>
+</body>
+
+</html>

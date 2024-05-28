@@ -16,7 +16,10 @@ import com.yeqifu.sys.vo.UserVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +37,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("user")
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -363,6 +367,30 @@ public class UserController {
             return ResultObj.UPDATE_ERROR;
         }
     }
-
+    /**
+     * 注册用户
+     * @param userVo
+     * @return
+     */
+    @RequestMapping("createUser")
+    @Transactional
+    public ResultObj registerUser(@RequestBody UserVo userVo){
+        try {
+            //设置类型
+            userVo.setType(Constast.USER_TYPE_NORMAL);
+            //设置盐
+            String salt = IdUtil.simpleUUID().toUpperCase();
+            userVo.setSalt(salt);
+            //设置默认密码
+            userVo.setPwd(new Md5Hash(Constast.USER_DEFAULT_PWD,salt,2).toString());
+            //设置用户默认头像
+            userVo.setImgpath(userVo.getImgpath());
+            userService.save(userVo);
+            return ResultObj.ADD_SUCCESS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultObj.ADD_ERROR;
+        }
+    }
 }
 

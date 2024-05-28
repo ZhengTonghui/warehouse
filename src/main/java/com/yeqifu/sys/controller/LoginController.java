@@ -2,6 +2,8 @@ package com.yeqifu.sys.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.core.util.ObjectUtil;
+
 import com.yeqifu.sys.common.ActiverUser;
 import com.yeqifu.sys.common.ResultObj;
 import com.yeqifu.sys.common.WebUtils;
@@ -40,7 +42,7 @@ public class LoginController {
 
         //获得存储在session中的验证码
         String sessionCode = (String) session.getAttribute("code");
-        if (code!=null && sessionCode.equals(code)){
+        if (code!=null && ObjectUtil.equal(sessionCode, code)){
             Subject subject = SecurityUtils.getSubject();
             AuthenticationToken token = new UsernamePasswordToken(userVo.getLoginname(),userVo.getPwd());
             try {
