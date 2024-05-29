@@ -388,7 +388,7 @@ public class UserController {
             //设置用户默认头像
             userVo.setImgpath(userVo.getImgpath());
             String hireDateStr=userVo.getStartDate();
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date hireDate = sdf.parse(hireDateStr);
             userVo.setHiredate(hireDate);
             userService.save(userVo);
